@@ -23,5 +23,27 @@ tasks.o: tasks.cpp tasks.h basetask.h
 clean:
 	rm -f $(OBJS) $(MAIN)
 
+ejercicio1: all
+	./simusched "../ejercicios/ejercicio 1.tsk" 1 10 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 1.png"
+
+ejercicio2: all
+	./simusched "../ejercicios/ejercicio 2.tsk" 1 4 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 2 - 1 nucleo.png"
+	./simusched "../ejercicios/ejercicio 2.tsk" 2 4 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 2 - 2 nucleos.png"
+
+ejercicio3: all
+	./simusched "../ejercicios/ejercicio 3.tsk" 1 4 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 3.png"
+
+ejercicio5: all
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedRR 2 | python graphsched.py > "../ejercicios/ejercicio 5 - quantum 2.png"
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedRR 10 | python graphsched.py > "../ejercicios/ejercicio 5 - quantum 10.png"
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedRR 50 | python graphsched.py > "../ejercicios/ejercicio 5 - quantum 50.png"
+
+ejercicio6: all
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 6 - quantum 2.png"
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 6 - quantum 10.png"
+	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 6 - quantum 50.png"
+
+ejercicios: ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6
+
 new: clean all
 

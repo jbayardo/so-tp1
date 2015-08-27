@@ -35,14 +35,14 @@ void TaskConsola(int pid, vector<int> params) {
 void TaskBatch(int pid, vector<int> params) {
 	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
 	default_random_engine generator(seed1);
-	uniform_int_distribution<int> distribution(0, params[0]-params[1]-1);
+	uniform_int_distribution<int> distribution(0, params[0]-params[1]-2);
 	std::set<int> times;
 
 	while (times.size() < params[1]) {
 		times.insert(distribution(generator));
 	}
 
-	for (int x = 0; x < params[0]-params[1]-1; x++){
+	for (int x = 0; x < params[0]-params[1]-1; ++x){
 		if (times.find(x) == times.end()){
 			uso_CPU(pid, 1);
 		} else {

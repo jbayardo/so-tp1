@@ -20,8 +20,7 @@ void SchedNoMistery::load(int p) {
 }
 
 void SchedNoMistery::unblock(int pid) {
-	// TODO: confirm
-	ready.push_front(pid);
+	ready.push_back(pid);
 }
 
 int SchedNoMistery::tick(int cpu, const enum Motivo m) {  

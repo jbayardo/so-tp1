@@ -47,6 +47,10 @@ ejercicio7: all
 	./simusched "../schedmistery/test1.tsk" 1 1 1 SchedMistery 50 25 10 | python graphsched.py > "../ejercicios/ejercicio 7-1.png"
 	./simusched "../schedmistery/test2.tsk" 1 1 1 SchedMistery 50 25 10 | python graphsched.py > "../ejercicios/ejercicio 7-2.png"
 
+ejercicio8: all
+	./simusched "../ejercicios/ejercicio 8-1.tsk" 1 2 10 SchedRR2 x| python graphsched.py > "../ejercicios/ejercicio 8 - 1.png"
+	./simusched "../ejercicios/ejercicio 8-2.tsk" 1 2 10 SchedRR2 x| python graphsched.py > "../ejercicios/ejercicio 8 - 2.png
+
 ejercicios: ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio7 ejercicio6
 
 new: clean all

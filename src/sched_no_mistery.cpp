@@ -8,33 +8,30 @@ SchedNoMistery::SchedNoMistery(vector<int> argn) {
 	this->ticks = 0;
 
 	this->quantums.push_back(1);
+	this->ready.push_back(std::list<int>());
 
 	for (int i = 1; i < argn.size(); ++i) {
 		this->quantums.push_back(argn[i]);
+		this->ready.push_back(std::list<int>());
 	}
 }
 
 void SchedNoMistery::load(int p) {
 	this->pending[p] = 0;
-	// for (auto it = this->ready.end(); it != this->ready.begin(); it--){
-	// 	if (this->pending[*it] > this->pending[p]){
-	// 		this->ready.insert(it,p);
-	// 		this->pending[p] = 0;
-	// 		return;
-	// 	}
-	// }
-	this->readyB.push_back(p);
-	this->blocked[p] = false;
+	this->ready[0].push_back(p);
 }
 
 void SchedNoMistery::unblock(int pid) {
-	this->readyB.push_back(pid);
+	this->ready[this->pending[this->pid]].push_back(pid);
 }
 
-int SchedNoMistery::tick(int cpu, const enum Motivo m) {  
+int SchedNoMistery::tick(int cpu, const enum Motivo m) {
+	bool context = false;
+
 	switch (m) {
 		case TICK:
-			++this->ticks;	
+			++this->ticks;
+
 			if (this->pid != IDLE_TASK) {
 				int pending = this->pending[this->pid];
 				int quantum = this->quantums[pending];
@@ -44,72 +41,38 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 						++this->pending[this->pid];
 					}
 
-					this->ready.push_back(this->pid);
-
-					if (!this->readyN.empty()) {
-						this->pid = this->readyN.front();
-						this->readyN.pop_front();
-					} else if (!this->readyB.empty()) {
-						this->pid = this->readyB.front();
-						this->readyB.pop_front();
-					} else if (!this->ready.empty()) {
-						this->pid = this->ready.front();
-						this->ready.pop_front();
-					}
-
-					this->ticks = 0;
+					this->ready[this->pending[this->pid]].push_back(this->pid);
+					context = true;
 				}
 			} else {
-				if (!this->readyN.empty()) {
-					this->pid = this->readyN.front();
-					this->readyN.pop_front();
-				} else if (!this->readyB.empty()) {
-					this->pid = this->readyB.front();
-					this->readyB.pop_front();
-				} else if (!this->ready.empty()) {
-					this->pid = this->ready.front();
-					this->ready.pop_front();
-				}
-				this->ticks = 0;
+				context = true;
 			}
-
 
 			break;
 		case BLOCK:
-			// if (this->pending[this->pid] < this->quantums.size() - 1) {
-			// 	++this->pending[this->pid];
-			// }
-
-			this->ticks = 0;
-			this->blocked[this->pid] = true;
-
-			if (!this->readyN.empty()) {
-				this->pid = this->readyN.front();
-				this->readyN.pop_front();
-			} else if (!this->readyB.empty()) {
-				this->pid = this->readyB.front();
-				this->readyB.pop_front();
-			} else if (!this->ready.empty()) {
-				this->pid = this->ready.front();
-				this->ready.pop_front();
-			} else {
-				this->pid = IDLE_TASK;				
+			if (this->pending[this->pid] > 0) {
+				--this->pending[this->pid];
 			}
 
+			context = true;
 			break;
 		case EXIT:
 			pending.erase(pid);
-			blocked.erase(pid);
-			this->ticks = 0;
-
-			if (this->ready.empty()) {
-				this->pid = IDLE_TASK;
-			} else {
-				this->pid = this->ready.front();
-				this->ready.pop_front();
-			}
-
+			context = true;
 			break;
+	}
+
+	if (context) {
+		this->pid = IDLE_TASK;
+		this->ticks = 0;
+
+		for (std::size_t i = 0; i < this->ready.size(); ++i) {
+			if (!this->ready[i].empty()) {
+				this->pid = this->ready[i].front();
+				this->ready[i].pop_front();
+				break;
+			}
+		}
 	}
 
 	return this->pid;

@@ -15,9 +15,7 @@ class SchedNoMistery : public SchedBase {
   private:
   	/*! Cola de procesos en ready
   	 */
-  	std::list<int> ready;
-    std::list<int> readyB;
-    std::list<int> readyN;
+  	std::vector<std::list<int>> ready;
 
   	/*! Vector con los quantums que hay que asignar, en el orden que se desea
   	 */
@@ -26,7 +24,6 @@ class SchedNoMistery : public SchedBase {
   	/*! Indice en el vector de quantums que lleva la tarea, asi sabemos la longitud del proximo quantum a asignarle
   	 */
   	std::map<int, int> pending;
-    std::map<int, bool> blocked;
 
   	/*! PID del proceso corriendo actualmente
   	 */
@@ -34,7 +31,7 @@ class SchedNoMistery : public SchedBase {
 
   	/*! Parte del quantum por el que va la tarea actual
   	 */
-  	int ticks = -1;
+  	int ticks;
 };
 
 #endif

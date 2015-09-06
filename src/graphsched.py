@@ -170,6 +170,12 @@ def drawGantt(data, fout, rg=3, width=1024, height=600, fontpath=None, settings=
 
 	# Grafico
 	for i in xrange(len(pids)):
+		tiempoRojo = 0
+		tiempoRojoAz = 0
+		tiempoVerde = 0
+		tiempowaiting = 0
+		noseejecuto = 1
+
 		sts = [UNLOAD for j in xrange(xmax+2)]
 		cores = [0 for j in xrange(xmax+2)]
 		p = 0
@@ -194,13 +200,22 @@ def drawGantt(data, fout, rg=3, width=1024, height=600, fontpath=None, settings=
 					core = l[p][2]
 				p += 1
 			if not ldd and pids[i] != -1: st = UNLOAD
-			elif cpu and blk: st = RUNNINGBLOCKED
-			elif cpu and not blk: st = RUNNING
+			elif cpu and blk: 
+				st = RUNNINGBLOCKED
+				tiempoRojoAz += 1
+			elif cpu and not blk: 
+				st = RUNNING
+				noseejecuto = 0
+				tiempoRojoAz += 1
+				tiempoRojo += 1
 			elif not cpu and blk: st = BLOCKED
-			else: st = READY
+			else: 
+				st = READY
+				tiempoVerde += 1
+				if (noseejecuto == 1): tiempowaiting += 1 
 			sts[j] = st
 			cores[j] = core
-
+		sys.stderr.write("TaskN= " + str(len(pids)-1-i) + " Waiting = " + str(tiempowaiting)  + " Ready = " + str(tiempoVerde) + " | Running = " + str(tiempoRojo) + " | Running+Blocked = " + str(tiempoRojoAz) + "\n")
 		ly = gy - i*ystp - ystp/2
 		uy = ly-ystp/3
 		by = ly+ystp/3
@@ -267,7 +282,6 @@ def drawGantt(data, fout, rg=3, width=1024, height=600, fontpath=None, settings=
 				if deadline > 0 and j == deadline:
 					#Linea de DEADLINE
 					draw.line((nx-1,uy-1,nx-1,by+1), fill='#790000',width=6)
-
 
 
 

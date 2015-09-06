@@ -23,12 +23,12 @@ void SchedNoMistery::load(int p) {
 	// 		return;
 	// 	}
 	// }
-	this->readyN.push_back(p);
+	this->readyB.push_back(p);
 	this->blocked[p] = false;
 }
 
 void SchedNoMistery::unblock(int pid) {
-	this->readyN.push_back(pid);
+	this->readyB.push_back(pid);
 }
 
 int SchedNoMistery::tick(int cpu, const enum Motivo m) {  
@@ -44,15 +44,14 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 						++this->pending[this->pid];
 					}
 
-					if (!this->blocked[this->pid]){
-						this->ready.push_back(this->pid);
-					} else {
-						this->ready.push_back(this->pid);
-						this->blocked[this->pid] = false;
-					}
+					this->ready.push_back(this->pid);
+
 					if (!this->readyN.empty()) {
 						this->pid = this->readyN.front();
 						this->readyN.pop_front();
+					} else if (!this->readyB.empty()) {
+						this->pid = this->readyB.front();
+						this->readyB.pop_front();
 					} else if (!this->ready.empty()) {
 						this->pid = this->ready.front();
 						this->ready.pop_front();
@@ -87,6 +86,9 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 			if (!this->readyN.empty()) {
 				this->pid = this->readyN.front();
 				this->readyN.pop_front();
+			} else if (!this->readyB.empty()) {
+				this->pid = this->readyB.front();
+				this->readyB.pop_front();
 			} else if (!this->ready.empty()) {
 				this->pid = this->ready.front();
 				this->ready.pop_front();

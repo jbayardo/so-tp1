@@ -46,9 +46,10 @@ ejercicio7: $(MAIN)
 	./simusched "../schedmistery/test2.tsk" 1 1 1 SchedMistery 50 25 10 | python graphsched.py > "../ejercicios/ejercicio 7-2.png"
 
 ejercicio8: $(MAIN)
-	./simusched "../ejercicios/ejercicio 5.tsk" 1 2 10 SchedFCFS | python graphsched.py > "../ejercicios/ejercicio 6.png"
+	./simusched "../ejercicios/ejercicio 8-1.tsk" 1 2 10 SchedRR2 x| python graphsched.py > "../ejercicios/ejercicio 8 - 1.png"
+	./simusched "../ejercicios/ejercicio 8-2.tsk" 1 2 10 SchedRR2 x| python graphsched.py > "../ejercicios/ejercicio 8 - 2.png
 
-ejercicios: ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6 ejercicio7 ejercicio8
+ejercicios: ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio7 ejercicio6 ejercicio8
 
 new: clean all
 

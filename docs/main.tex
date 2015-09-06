@@ -10,10 +10,10 @@
 \usepackage{geometry}
 \usepackage{fixltx2e}
 \usepackage{wrapfig}
+\usepackage{verbatim}
 \usepackage{cite}
 \usepackage{float}
 \usepackage[space]{grffile}
-\usepackage{tpalgo3}
 \geometry{
  a4paper,
  total={210mm,297mm},
@@ -43,7 +43,31 @@
 \pagebreak
 
 \section{Ejercicio 1}
+
+La implementación en este caso es realmente simple: consiste simplemente en generar números aleatoriamente distribuidos utilizando el generador pseudoaleatorio de la librería estándar de C++, seedeado utilizando el tiempo UNIX en el que se corre el algoritmo. Elegimos utilizar C++11 para esto precisamente porque utilizar la clásica función random de la librería en las versiones anteriores es problemático para generar números entre cierto rango, como es pedido en el enunciado. Podemos observar en la figura \ref{grf:ex1} el resultado de evaluar un lote de \verb`TaskConsola 10 2 20`
+
+\begin{figure}[h!]
+\caption{Lote de tareas que utiliza TaskConsola \label{grf:ex1}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 1}
+\end{figure}
+
 \section{Ejercicio 2}
+
+
+
+\begin{figure}[h!]
+\caption{Lote de tareas ejecutándose en 1 núcleo \label{grf:ex2-1}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 2 - 1 nucleo}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Lote de tareas ejecutándose en 2 núcleos \label{grf:ex2-2}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 2 - 2 nucleos}
+\end{figure}
+
 \section{Ejercicio 3}
 \section{Ejercicio 4}
 \section{Ejercicio 5}

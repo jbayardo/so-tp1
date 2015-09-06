@@ -109,7 +109,7 @@ TaskCPU 200
 \includegraphics[width=15cm]{../ejercicios/ejercicio 7-1}
 \end{figure}
 
-Utilizando todos los argumentos del programa en 1, y pasando como único argumento del scheduler al 1 también. Luego probamos con pasar 5, 10, y después comenzamos a agregar argumentos. Esto nos permitió darnos cuenta que el quantum de tiempo para las tareas debía corresponderse con los argumentos, fijando el primer quantum en 1. A partir de esta idea, creamos una primera implementación parcial, testeandola con el siguiente lote de tareas:
+Utilizando todos los argumentos del programa en 1, y pasando como único argumento del scheduler al 1 también. Luego probamos con pasar 5, 10, y después comenzamos a agregar argumentos. Esto nos permitió darnos cuenta que el quantum de tiempo para las tareas debía corresponderse con los argumentos. Luego, utilizamos el siguiente lote de tareas:
 
 \begin{figure}[h!]
 \caption{Resultado del segundo lote de tareas \label{grf:ex7-2}}
@@ -122,7 +122,7 @@ TaskAlterno 20 20 20
 TaskCPU 50
 \end{verbatim}
 
-Que nos mostró que el scheduler de la cátedra baja el quantum de los procesos al valor anterior cuando se bloquean. Finalmente, testeamos que este andando bien corriendo varios ejemplos, que se pueden encontrar en la carpeta \verb`schedmistery`.
+Que nos mostró que el scheduler de la cátedra baja el quantum de los procesos al valor anterior cuando se bloquean, así como que el primer quantum debe ser uno. Finalmente, testeamos que este andando bien corriendo varios ejemplos, que se pueden encontrar en la carpeta \verb`schedmistery`.
 
 \section{Ejercicio 8}
 

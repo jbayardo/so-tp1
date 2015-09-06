@@ -15,12 +15,20 @@ SchedNoMistery::SchedNoMistery(vector<int> argn) {
 }
 
 void SchedNoMistery::load(int p) {
-	this->ready.push_back(p);
 	this->pending[p] = 0;
+	// for (auto it = this->ready.end(); it != this->ready.begin(); it--){
+	// 	if (this->pending[*it] > this->pending[p]){
+	// 		this->ready.insert(it,p);
+	// 		this->pending[p] = 0;
+	// 		return;
+	// 	}
+	// }
+	this->readyN.push_back(p);
+	this->blocked[p] = false;
 }
 
 void SchedNoMistery::unblock(int pid) {
-	ready.push_back(pid);
+	this->readyN.push_back(pid);
 }
 
 int SchedNoMistery::tick(int cpu, const enum Motivo m) {  
@@ -36,8 +44,16 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 						++this->pending[this->pid];
 					}
 
-					if (!this->ready.empty()) {
+					if (!this->blocked[this->pid]){
 						this->ready.push_back(this->pid);
+					} else {
+						this->ready.push_back(this->pid);
+						this->blocked[this->pid] = false;
+					}
+					if (!this->readyN.empty()) {
+						this->pid = this->readyN.front();
+						this->readyN.pop_front();
+					} else if (!this->ready.empty()) {
 						this->pid = this->ready.front();
 						this->ready.pop_front();
 					}
@@ -45,33 +61,43 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 					this->ticks = 0;
 				}
 			} else {
-				if (!this->ready.empty()) {
-					// cambio de contexto
+				if (!this->readyN.empty()) {
+					this->pid = this->readyN.front();
+					this->readyN.pop_front();
+				} else if (!this->readyB.empty()) {
+					this->pid = this->readyB.front();
+					this->readyB.pop_front();
+				} else if (!this->ready.empty()) {
 					this->pid = this->ready.front();
 					this->ready.pop_front();
-					this->ticks = 0;
 				}
+				this->ticks = 0;
 			}
 
 
 			break;
 		case BLOCK:
-			if (this->pending[this->pid] < this->quantums.size() - 1) {
-				++this->pending[this->pid];
-			}
+			// if (this->pending[this->pid] < this->quantums.size() - 1) {
+			// 	++this->pending[this->pid];
+			// }
 
 			this->ticks = 0;
+			this->blocked[this->pid] = true;
 
-			if (this->ready.empty()) {
-				this->pid = IDLE_TASK;
-			} else {
+			if (!this->readyN.empty()) {
+				this->pid = this->readyN.front();
+				this->readyN.pop_front();
+			} else if (!this->ready.empty()) {
 				this->pid = this->ready.front();
 				this->ready.pop_front();
+			} else {
+				this->pid = IDLE_TASK;				
 			}
 
 			break;
 		case EXIT:
 			pending.erase(pid);
+			blocked.erase(pid);
 			this->ticks = 0;
 
 			if (this->ready.empty()) {

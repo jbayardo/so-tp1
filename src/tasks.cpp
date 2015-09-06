@@ -23,29 +23,38 @@ void TaskAlterno(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid
 }
 
 void TaskConsola(int pid, vector<int> params) {
+	// Inicializamos el generador de numeros
 	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
 	default_random_engine generator(seed1);
 	uniform_int_distribution<int> distribution(params[1], params[2]);
 
+	// Hacemos uso de IO con los numeros aleatorios
 	for (int i = 0; i < params[0]; ++i) {
 		uso_IO(pid, distribution(generator));
 	}
 }
 
 void TaskBatch(int pid, vector<int> params) {
+	// Inicializamos el generador de numeros
 	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
 	default_random_engine generator(seed1);
 	uniform_int_distribution<int> distribution(0, params[0]-params[1]-2);
+
+	// Utilizamos un set para asegurarnos que al final tengamos todos tiempos unicos
 	std::set<int> times;
 
+	// Generamos los tiempos para hacer IO
 	while (times.size() < params[1]) {
 		times.insert(distribution(generator));
 	}
 
+	// Iteramos por cada instante de tiempo posible, y elegimos que hacer
 	for (int x = 0; x < params[0]-params[1]-1; ++x){
-		if (times.find(x) == times.end()){
+		// Si no encontramos el tiempo, significa que hay que usar la CPU
+		if (times.find(x) == times.end()) {
 			uso_CPU(pid, 1);
 		} else {
+			// Si no, utilizamos IO.
 			uso_IO(pid, 1);
 		}
 	}

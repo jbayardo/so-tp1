@@ -254,4 +254,44 @@ Finalmente, testeamos que este andando bien corriendo varios ejemplos, que se pu
 
 \section{Ejercicio 8}
 
+Utilizar un planificador que considere la migración va a ser en muchos casos favorables, un caso muy importante seria el caso en que un usuario deje corriendo por horas varios script de procesamientos de datos con distintos archivos, y, en el caso de no considerar la migración de datos, al asignarse el núcleo en el cual va a correr cada tarea en el momento de ser cargada, uno corre el riesgo de que esto resulte en una distribución desequilibrada de trabajo. Si una cantidad considerable de estos scripts es cargada en un pequeño periodo de tiempo, hay mucha posibilidad de que varios, por ejemplo, terminen en un corto plazo por encontrar que su archivo a analizar esta corrupto, y si llegan a encontrarse algo desbalanceados los casos las tareas que tardan mucho con las que no en los núcleos, va a resultar a largo plazo en un uso intensivo de algunos de los núcleos, mientras otros se encuentran esperando a ser asignados, desperdiciando su tiempo de computo, ya que nunca se van a redistribuir los procesos entre los núcleos. Otro caso similar seria si uno carga tareas en una secuencia particular en una maquina de dos núcleos, por ejemplo, un navegador web, luego un editor de texto, y por ultimo un reproductor de musica. Van a quedar dos tareas muy intensas en un mismo núcleo, y nunca van a rebalancearse las cargas.
+
+Ahora veamos a ver como se desempeña un lote de tareas, que busca acentuar este problema, utilizando un scheduler RoundRobin sin y con migración de procesos:
+
+\begin{figure}[h!]
+\caption{Resultado del lote utilizando migración \label{grf:ex8-1m}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-1RR}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Resultado del lote sin utilizar migración \label{grf:ex8-1}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-1}
+\end{figure}
+
+Comparando estos gráficos se puede ver claramente que en el segundo gráfico uno de los núcleos se encuentra casi un 90\% del tiempo ocioso, mientras el otro es constantemente asignado a una tarea. En el primero se puede ver como ambos se encuentran el casi el 90\% del tiempo corriendo tareas. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}

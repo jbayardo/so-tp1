@@ -14,13 +14,25 @@ class SchedRR : public SchedBase {
 		virtual void unblock(int pid);
 		virtual int tick(int cpu, const enum Motivo m);
 	private:
+		/*! Número de cores
+		 */
 		int cores;
-		std::vector<int> quantums;
-		std::unordered_map<int, int> running;
-		std::unordered_map<int, int> coreStates;
-		std::queue<int> next;
-		bool firstTick;
 
+		/*! Quantums indexados por cpu
+		 */
+		std::vector<int> quantums;
+
+		/*! Cuanto del quantum lleva corriendo cada proceso
+		 */
+		std::unordered_map<int, int> running;
+
+		/*! Qué proceso está corriendo cada cpu (podríamos haber utilizado un vector)
+		 */
+		std::unordered_map<int, int> coreStates;
+
+		/*! Procesos en estado ready
+		 */
+		std::queue<int> next;
 };
 
 #endif

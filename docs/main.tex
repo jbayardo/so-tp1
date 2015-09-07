@@ -179,6 +179,8 @@ En conclusión, hemos encontrado que variar el quantum nos lleva a un trade-off 
 
 \section{Ejercicio 6}
 
+Queda claro, observando las métricas, que en términos de tiempo total ambos algoritmos son similares: el tiempo total promedio utilizando FCFS es de 243, mientras que utilizando Round Robin son de 251.6, 237.2, y 270.8 (para los quantums 2, 10 y 50 respectivamente).
+
 \begin{table}[h!]
 \centering
 \caption{Métricas para el scheduler con FCFS}
@@ -193,17 +195,15 @@ Task & Latencia & Waiting Time & Tiempo Total \\
 \end{tabular}
 \end{table}
 
-Queda claro, observando las métricas, que en términos de tiempo total ambos algoritmos son similares: el tiempo total promedio utilizando FCFS es de 243, mientras que utilizando Round Robin son de 251.6, 237.2, y 270.8 (para los quantums 2, 10 y 50 respectivamente).
-
 La diferencia está absolutamente en cómo deseamos distribuir la prioridad: FCFS claramente prioriza a los procesos que vinieron primero, mientras que Round Robin realiza una distribución más equitativa del tiempo. Entre otras cosas, el hecho de usar Round Robin permite aprovechar el tiempo en el cual una tarea se encuentra bloqueada para asignarle ese tiempo a otra tarea, así como de crear la ilusión de que más de una tarea se corre al mismo tiempo. Ambas cuestiones no suceden en un esquema de scheduling que utilice FCFS.
-
-Tal vez la desventaja más grande de FCFS sea precisamente esta última: no es apto para un entorno multiusuario, ya que un solo usuario podría crear muchos procesos y dejar a otro usuario sin recursos por un largo período de tiempo, mientras que el esquema de Round Robin no permitite estas situaciones.
 
 \begin{figure}[h!]
 \caption{Lote de tareas ejecutado sobre FCFS con cambio de contexto de 2 ciclos, y un sólo núcleo. \label{grf:ex6-1}}
 \centering
 \includegraphics[width=15cm]{../ejercicios/ejercicio 6 - quantum 2}
 \end{figure}
+
+Tal vez la desventaja más grande de FCFS sea precisamente esta última: no es apto para un entorno multiusuario, ya que un solo usuario podría crear muchos procesos y dejar a otro usuario sin recursos por un largo período de tiempo, mientras que el esquema de Round Robin no permite estas situaciones. Además, tampoco es útil en un entorno donde se precise correr múltiples tareas al mismo tiempo, simplemente porque la forma en la que se ejecutan las tareas, que no permite que estas sean interrumpidas 8===D.
 
 \section{Ejercicio 7}
 
@@ -236,10 +236,21 @@ TaskCPU 10
 \begin{figure}[h!]
 \caption{Resultado del segundo lote de tareas \label{grf:ex7-2}}
 \centering
-\includegraphics[width=15cm]{../ejercicios/ejercicio 7-2}
+\includegraphics[width=15cm]{../ejercicios/ejercicio 7-3}
 \end{figure}
 
-Que nos mostró que el scheduler de la cátedra baja el quantum de los procesos al valor anterior cuando se bloquean, así como que el primer quantum debe ser uno. Finalmente, testeamos que este andando bien corriendo varios ejemplos, que se pueden encontrar en la carpeta \verb`schedmistery`.
+Que nos mostró varias cosas:
+\begin{itemize}
+\item El scheduler de la cátedra baja el quantum de los procesos al valor anterior cuando se bloquean.
+\item El primer quantum es uno, y luego vienen los que se elijen por parámetros.
+\item Se ve que hay cierta prioridad a la hora de elegir que tarea ejecutar en el momento, al principio creíamos que se le daba prioridad a las bloqueadas, pero luego, al ver la imagen, y tener en cuenta lo que descubrimos en el ítem anterior, se le da prioridad a las que se encuentran actualmente usando un quantum anterior a los demás, como por ejemplo se puede ver en la imagen, la tarea 3 que su proximo quantum a utilizar después de su primera ejecución es 5, y los de las tareas 0, 1 y 2 es 1, por lo tanto, hasta que ellas no llegan también al quantum 5, la tarea 3 nunca es asignada.
+\end{itemize}
+
+Luego de varias idas y vueltas llegamos a comprender correctamente las políticas y por lo tanto logramos implementar los algoritmos correctos.\par
+En este caso constaba de una cola por cada quantum a utilizar (incluido el 1 que no es mandado por parámetro explicito). Cuando se carga una tarea se la encola a la primera cola. Cuando a una tarea se le termina su quantum, se la pasa a la cola siguiente. Cuando una tarea es bloqueada se le decrementa al anterior su quantum, y cuando es desbloqueada se la encola a la cola anterior a la que estuvo antes.\par
+A la hora de elegir que tarea asignar cuando se le acabo el quantum, se bloqueo o termino la tarea actual, se empezara desencolando de la cola (las que tienen asignado el quantum "1") si esta está vacia, se avanza a la siguiente y así sucesivamente. Por lo tanto se le da prioridad a las tareas que no hayan podido avanzar su quantum.\par
+Ese seria un resumen de la política de scheduling.
+Finalmente, testeamos que este andando bien corriendo varios ejemplos, que se pueden encontrar en la carpeta \verb`schedmistery`.
 
 \section{Ejercicio 8}
 

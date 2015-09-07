@@ -200,7 +200,7 @@ La diferencia está absolutamente en cómo deseamos distribuir la prioridad: FCF
 \begin{figure}[h!]
 \caption{Lote de tareas ejecutado sobre FCFS con cambio de contexto de 2 ciclos, y un sólo núcleo. \label{grf:ex6-1}}
 \centering
-\includegraphics[width=15cm]{../ejercicios/ejercicio 6 - quantum 2}
+\includegraphics[width=15cm]{../ejercicios/ejercicio 6}
 \end{figure}
 
 Tal vez la desventaja más grande de FCFS sea precisamente esta última: no es apto para un entorno multiusuario, ya que un solo usuario podría crear muchos procesos y dejar a otro usuario sin recursos por un largo período de tiempo, mientras que el esquema de Round Robin no permite estas situaciones. Además, tampoco es útil en un entorno donde se precise correr múltiples tareas al mismo tiempo, simplemente porque la forma en la que se ejecutan las tareas, que no permite que estas sean interrumpidas 8===D.
@@ -272,26 +272,23 @@ Ahora veamos a ver como se desempeña un lote de tareas, que busca acentuar este
 
 Comparando estos gráficos se puede ver claramente que en el segundo gráfico uno de los núcleos se encuentra casi un 90\% del tiempo ocioso, mientras el otro es constantemente asignado a una tarea. En el primero se puede ver como ambos se encuentran el casi el 90\% del tiempo corriendo tareas. 
 
+También podemos ver un comportamiento similar en un lote no hecho a propósito para este test (hecho para el ejercicio 7):
 
+\begin{figure}[h!]
+\caption{Resultado del lote utilizando migración \label{grf:ex8-1bm}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-1bRR}
+\end{figure}
 
+\begin{figure}[h!]
+\caption{Resultado del lote sin utilizar migración \label{grf:ex8-1b}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-1b}
+\end{figure}
 
+Por último, pensemos cuando es desfavorable migrar procesos entre núcleos. Como vimos hemos visto en materias previas, cada núcleo cuenta con su propia memoria de cache, la cual, en caso de migrar un proceso de un núcleo a otro, la del nuevo núcleo esta, muy probablemente, totalmente desligada al estado actual del proceso, por lo tanto se desperdicio toda la optimización que se haya hecho en esa tarea con respecto a la memoria cache, que como sabemos, los compiladores actuales van a buscar aprovecharlos.\par
+Este, prácticamente, reseteo de la memoria cache se puede reflejar como un aumento de costo de migración de proceso.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Esto se reflejara de forma evidente en el caso en el que se hagan tareas con uso intenso de procesamiento constante, en este caso constante costo de migración se va a acumularse, resultando en un gran costo a largo plazo
 
 \end{document}

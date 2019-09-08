@@ -289,6 +289,22 @@ También podemos ver un comportamiento similar en un lote no hecho a propósito 
 Por último, pensemos cuando es desfavorable migrar procesos entre núcleos. Como vimos hemos visto en materias previas, cada núcleo cuenta con su propia memoria de cache, la cual, en caso de migrar un proceso de un núcleo a otro, la del nuevo núcleo esta, muy probablemente, totalmente desligada al estado actual del proceso, por lo tanto se desperdicio toda la optimización que se haya hecho en esa tarea con respecto a la memoria cache, que como sabemos, los compiladores actuales van a buscar aprovecharlos.\par
 Este, prácticamente, reseteo de la memoria cache se puede reflejar como un aumento de costo de migración de proceso.
 
-Esto se reflejara de forma evidente en el caso en el que se hagan tareas con uso intenso de procesamiento constante, en este caso constante costo de migración se va a acumularse, resultando en un gran costo a largo plazo
+Esto se reflejara de forma evidente en el caso en el que se hagan tareas con uso intenso de procesamiento constante, en este caso constante costo de migración se va a acumularse, resultando en un gran costo a largo plazo.
+
+Veamos los resultados:
+
+\begin{figure}[h!]
+\caption{Resultado del lote utilizando migración \label{grf:ex8-1bm}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-2m}
+\end{figure}
+
+\begin{figure}[h!]
+\caption{Resultado del lote sin utilizar migración \label{grf:ex8-1b}}
+\centering
+\includegraphics[width=15cm]{../ejercicios/ejercicio 8-2}
+\end{figure}
+
+Como se puede ver, la ganancia de no tener ociosos los núcleos se ve tapada por el gran costo de migración, que va a ser mayor al ser aplicaciones intensas con aprovechamiento de cache
 
 \end{document}
